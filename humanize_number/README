@@ -1,0 +1,98 @@
+Humanize number from NetBSD's libc. See example.c!
+
+BSD                            January 14, 2011                            BSD
+UMANIZE_NUMBER(3)       BSD Library Functions Manual       HUMANIZE_NUMBER(3)
+
+NAME
+     dehumanize_number, humanize_number — format a number into a human read‐
+     able form and vice versa
+
+SYNOPSIS
+     #include <stdlib.h>
+
+     int
+     dehumanize_number(const char *str, int64_t *result);
+
+     int
+     humanize_number(char *buffer, size_t len, int64_t number,
+         const char *suffix, int scale, int flags);
+
+DESCRIPTION
+     The humanize_number() function formats the signed 64 bit quantity given
+     in number into buffer.  A space and then suffix is appended to the end.
+     buffer must be at least len bytes long.
+
+     If the formatted number (including suffix) would be too long to fit into
+     buffer, then divide number by 1024 until it will.  In this case, prefix
+     suffix with the appropriate SI designator.
+
+     The prefixes are:
+
+           Prefix    Description    Multiplier
+           k         kilo           1024
+           M         mega           1048576
+           G         giga           1073741824
+           T         tera           1099511627776
+           P         peta           1125899906842624
+           E         exa            1152921504606846976
+
+     len must be at least 4 plus the length of suffix, in order to ensure a
+     useful result is generated into buffer.  To use a specific prefix, spec‐
+     ify this as scale (Multiplier = 1024 ^ scale).  This can not be combined
+     with any of the scale flags below.
+
+     The following flags may be passed in scale:
+
+           HN_AUTOSCALE  Format the buffer using the lowest multiplier possi‐
+                         ble.
+
+           HN_GETSCALE   Return the prefix index number (the number of times
+                         number must be divided to fit) instead of formatting
+                         it to the buffer.
+
+     The following flags may be passed in flags:
+
+           HN_DECIMAL    If the final result is less than 10, display it using
+                         one digit.
+
+           HN_NOSPACE    Do not put a space between number and the prefix.
+
+           HN_B          Use ’B’ (bytes) as prefix if the original result does
+                         not have a prefix.
+
+           HN_DIVISOR_1000
+                         Divide number with 1000 instead of 1024.
+
+     The dehumanize_number() function parses the string representing an inte‐
+     gral value given in str and stores the numerical value in the integer
+     pointed to by result.  The provided string may hold one of the suffixes,
+     which will be interpreted and used to scale up its accompanying numerical
+     value.
+
+RETURN VALUES
+     humanize_number() returns the number of characters stored in buffer
+     (excluding the terminating NUL) upon success, or −1 upon failure.  If
+     HN_GETSCALE is specified, the prefix index number will be returned
+     instead.
+
+     dehumanize_number() returns 0 if the string was parsed correctly.  A −1
+     is returned to indicate failure and an error code is stored in errno.
+
+ERRORS
+     dehumanize_number() will fail and no number will be stored in result if:
+
+     [EINVAL]           The string in str was empty or carried an unknown suf‐
+                        fix.
+
+     [ERANGE]           The string in str represented a number that does not
+                        fit in result.
+
+SEE ALSO
+     strsuftoll(3), orders(7), humanize_number(9)
+
+HISTORY
+     humanize_number() first appeared in NetBSD 2.0.
+
+     dehumanize_number() first appeared in NetBSD 5.0.
+
+BSD                            January 14, 2011                            BSD
