@@ -4,10 +4,11 @@ MANPREFIX=	${PREFIX}/man
 SRCS=	humanize_number.c dehumanize_number.c
 TARGET=	libhn.dylib
 CFLAGS=	-Wall -dynamiclib
+SHARED_LIB=	-install_name ${PREFIX}/lib/${TARGET}	
 RM=	/bin/rm
 
 all:
-	${CC} ${SRCS} ${CFLAGS} -o ${TARGET} 
+	${CC} ${SRCS} ${CFLAGS} ${SHARED_LIB} -o ${TARGET} 
 
 install:
 	test -d ${DESTDIR}${PREFIX}/lib || mkdir -p ${DESTDIR}${PREFIX}/lib
