@@ -20,6 +20,5 @@ int main(void) {
     free(stemp2);
     free(string);
     string = NULL;
-
     return 0;
 }

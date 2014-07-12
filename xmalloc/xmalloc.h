@@ -16,8 +16,10 @@
  * called by a name other than "ssh" or "Secure Shell".
  */
 
-void    fatal(const char *, ...) __attribute__((noreturn))
-                __attribute__((__format__ (printf, 1, 2)));
+#define fatal(...)      \
+        fprintf(stderr, __VA_ARGS__); \
+        exit(EXIT_FAILURE);
+
 void	*xmalloc(size_t);
 void	*xcalloc(size_t, size_t);
 void	*xrealloc(void *, size_t, size_t);

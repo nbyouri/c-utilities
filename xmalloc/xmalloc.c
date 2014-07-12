@@ -21,27 +21,13 @@
 
 #include "xmalloc.h"
 
-void
-fatal(const char *msg, ...)
-{
-        va_list ap;
-        int i;
-
-	va_start(ap, msg);
-        i = fprintf(stderr, "%s", msg);
-	va_end(ap);
-
-        // quit cowardly
-        exit(EXIT_FAILURE);
-}
-
 void *
 xmalloc(size_t size)
 {
 	void *ptr;
 
 	if (size == 0)
-		fatal("xmalloc: zero size");
+		fatal("xmalloc: zero size\n");
 	ptr = malloc(size);
 	if (ptr == NULL)
 		fatal("xmalloc: out of memory (allocating %zu bytes)", size);
