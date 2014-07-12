@@ -3,7 +3,7 @@ PREFIX=		/usr/pkg
 CFLAGS=		-Weverything -dynamiclib
 LDFLAGS=	
 SRCS=		xmalloc.c
-TARGET=		xmalloc.dylib
+TARGET=		libxmalloc.dylib
 SHARED_LIB=	-install_name ${PREFIX}/lib/${TARGET}	
 
 all:
@@ -12,11 +12,11 @@ all:
 install:
 	test -f ${DESTDIR}${PREFIX}/lib || mkdir -p ${DESTDIR}${PREFIX}/lib
 	test -f ${DESTDIR}${PREFIX}/include || mkdir -p ${DESTDIR}${PREFIX}/include
-	install -pm 755 xmalloc.dylib ${DESTDIR}${PREFIX}/lib/libxmalloc.dylib
+	install -pm 755 ${TARGET} ${DESTDIR}${PREFIX}/lib/${TARGET}
 	install -pm 755 xmalloc.h ${DESTDIR}${PREFIX}/include/xmalloc.h
 
 uninstall:
-	rm ${DESTDIR}${PREFIX}/lib/libxmalloc.dylib
+	rm ${DESTDIR}${PREFIX}/lib/${TARGET}
 	rm ${DESTDIR}${PREFIX}/include/xmalloc.h
 	
 clean:
