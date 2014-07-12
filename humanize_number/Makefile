@@ -1,11 +1,10 @@
-CC=	clang
-PREFIX=	/usr/pkg
+CC=		clang
+PREFIX=		/usr/pkg
 MANPREFIX=	${PREFIX}/man
-SRCS=	humanize_number.c dehumanize_number.c
-TARGET=	libhn.dylib
-CFLAGS=	-Wall -dynamiclib
+SRCS=		humanize_number.c dehumanize_number.c
+TARGET=		libhn.dylib
+CFLAGS=		-Wall -dynamiclib
 SHARED_LIB=	-install_name ${PREFIX}/lib/${TARGET}	
-RM=	/bin/rm
 
 all:
 	${CC} ${SRCS} ${CFLAGS} ${SHARED_LIB} -o ${TARGET} 
@@ -19,9 +18,9 @@ install:
 	install -pm 755 humanize_number.h ${DESTDIR}${PREFIX}/include/humanize_number.h
 
 deinstall:
-	${RM} ${DESTDIR}${PREFIX}/include/humanize_number.h
-	${RM} ${DESTDIR}${MANPREFIX}/man3/humanize_number.3
-	${RM} ${DESTDIR}${PREFIX}/lib/${TARGET}
+	rm ${DESTDIR}${PREFIX}/include/humanize_number.h
+	rm ${DESTDIR}${MANPREFIX}/man3/humanize_number.3
+	rm ${DESTDIR}${PREFIX}/lib/${TARGET}
 
 clean:
-	${RM} ${TARGET}
+	rm ${TARGET}
