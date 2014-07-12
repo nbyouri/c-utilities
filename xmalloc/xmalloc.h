@@ -16,9 +16,11 @@
  * called by a name other than "ssh" or "Secure Shell".
  */
 
-#define fatal(...)      \
-        fprintf(stderr, __VA_ARGS__); \
-        exit(EXIT_FAILURE);
+#define fatal(...)                      \
+        do {                            \
+        fprintf(stderr, __VA_ARGS__);   \
+        exit(EXIT_FAILURE);             \
+        } while (0)
 
 void	*xmalloc(size_t);
 void	*xcalloc(size_t, size_t);
