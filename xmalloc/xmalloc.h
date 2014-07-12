@@ -17,10 +17,10 @@
  */
 
 #define fatal(...)                      \
-        do {                            \
+    do {                            \
         fprintf(stderr, __VA_ARGS__);   \
         exit(EXIT_FAILURE);             \
-        } while (0)
+    } while (0)
 
 void	*xmalloc(size_t);
 void	*xcalloc(size_t, size_t);
