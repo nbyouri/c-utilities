@@ -15,6 +15,10 @@ install:
 	install -pm 755 xmalloc.dylib ${DESTDIR}${PREFIX}/lib/libxmalloc.dylib
 	install -pm 755 xmalloc.h ${DESTDIR}${PREFIX}/include/xmalloc.h
 
+uninstall:
+	rm ${DESTDIR}${PREFIX}/lib/libxmalloc.dylib
+	rm ${DESTDIR}${PREFIX}/include/xmalloc.h
+	
 clean:
 	rm ${TARGET}
 	
