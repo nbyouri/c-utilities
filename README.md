@@ -1,6 +1,8 @@
 Various C utilities I use to make writing programs nicer.
 
 
+- strtonum : converts string to long long
+
 - humanize_number : this allows you to convert numbers to human readable numbers.
 
         ex. 90000 -> 90K
