@@ -1,0 +1,103 @@
+--- humanize_number.c.orig	2015-02-20 18:59:34.000000000 +0100
++++ humanize_number.c	2015-02-20 18:56:21.000000000 +0100
+@@ -48,12 +48,11 @@
+     const char *suffix, int scale, int flags)
+ {
+ 	const char *prefixes, *sep;
+-	int	b, r, s1, s2, sign;
++	int	b, s1, s2, sign, r = 0;
+ 	int64_t	divisor, max, post = 1;
+ 	size_t	i, baselen, maxscale;
++        int     getscale = 0;
+ 
+-	_DIAGASSERT(buf != NULL);
+-	_DIAGASSERT(suffix != NULL);
+ 	_DIAGASSERT(scale >= 0);
+ 
+ 	if (flags & HN_DIVISOR_1000) {
+@@ -75,6 +74,15 @@
+ 			prefixes = "\0\0K\0M\0G\0T\0P\0E";
+ 	}
+ 
++        if (scale & HN_GETSCALE)
++                getscale = 1;
++
++        if ((getscale) && (suffix == NULL))
++                return (-1);
++
++        if ((!getscale) && (buf == NULL))
++                return (-1);
++
+ #define	SCALE2PREFIX(scale)	(&prefixes[(scale) << 1])
+ 	maxscale = 7;
+ 
+@@ -85,7 +93,7 @@
+ 	if (buf == NULL || suffix == NULL)
+ 		return (-1);
+ 
+-	if (len > 0)
++	if ((buf != NULL) && (len > 0))
+ 		buf[0] = '\0';
+ 	if (bytes < 0) {
+ 		sign = -1;
+@@ -113,7 +121,8 @@
+ 		sep = " ";
+ 		baselen++;
+ 	}
+-	baselen += strlen(suffix);
++        if (suffix != NULL)
++	        baselen += strlen(suffix);
+ 
+ 	/* Check if enough room for `x y' + suffix + `\0' */
+ 	if (len < baselen + 1)
+@@ -131,11 +140,6 @@
+ 		 */
+ 		for (i = 0; bytes >= max - 50 && i < maxscale; i++)
+ 			bytes /= divisor;
+-
+-		if (scale & HN_GETSCALE) {
+-			_DIAGASSERT(__type_fit(int, i));
+-			return (int)i;
+-		}
+ 	} else
+ 		for (i = 0; i < (size_t)scale && i < maxscale; i++)
+ 			bytes /= divisor;
+@@ -148,14 +152,28 @@
+ 			return (-1);
+ 		b = ((int)bytes + 5) / 10;
+ 		s1 = b / 10;
+-		s2 = b % 10;
+-		r = snprintf(buf, len, "%d%s%d%s%s%s",
+-		    sign * s1, localeconv()->decimal_point, s2,
+-		    sep, SCALE2PREFIX(i), suffix);
+-	} else
+-		r = snprintf(buf, len, "%" PRId64 "%s%s%s",
+-		    sign * ((bytes + 50) / 100),
+-		    sep, SCALE2PREFIX(i), suffix);
+-
+-	return (r);
++                s2 = b % 10;
++                if (suffix != NULL)
++                        r = snprintf(buf, len, "%d%s%d%s%s%s",
++                                sign * s1, localeconv()->decimal_point, s2,
++                                sep, SCALE2PREFIX(i), suffix);
++                else
++                        r = snprintf(buf, len, "%d%s%d%s%s",
++                                sign * s1, localeconv()->decimal_point, s2,
++                                sep, SCALE2PREFIX(i));
++        } else {
++            if (suffix != NULL)
++                        r = snprintf(buf, len, "%" PRId64 "%s%s%s",
++                                sign * ((bytes + 50) / 100),
++                                sep, SCALE2PREFIX(i), suffix);
++            else
++                        r = snprintf(buf, len, "%" PRId64 "%s%s",
++                                sign * ((bytes + 50) / 100),
++                                sep, SCALE2PREFIX(i));
++        }
++
++        if (getscale)
++                return (int)i;
++        else
++                return (r);
+ }
